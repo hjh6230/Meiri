@@ -36,7 +36,7 @@ class MySession(Session):
             handle = kwargs.get('user_id')
         super().__init__(stype, handle)
     
-    def Send(self, message):
+    async def Send(self, message):
         context = message.extra
         session = message.session
         
@@ -46,6 +46,6 @@ class MySession(Session):
         elif session.stype == SessionType.FRIEND or session.stype == SessionType.TEMPORARY:
             context['message_type'] = 'private'
             context['user_id'] = message.sender.uid
-        CQBot.Send(context, message.data)
+        await CQBot.Send(context, message=message.data)
 
 CQBot.run(host='127.0.0.1', port=8080)
