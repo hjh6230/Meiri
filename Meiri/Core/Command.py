@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 class Command:
+    callee = None
+    finish = False
     def __init__(self):
         self.callee = None
         self.finish = False

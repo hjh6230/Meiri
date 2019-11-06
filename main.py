@@ -3,7 +3,7 @@
 from aiocqhttp import CQHttp
 
 from Meiri import User, Session, SessionType, Message
-from Meiri import meiri
+from Meiri import meiri, asyncfunction
 
 CQBot = CQHttp(api_root='http://127.0.0.1:5700/', access_token='AmeyaMeiri', secret='AmeyaMeiri')
 
@@ -36,7 +36,8 @@ class MySession(Session):
             handle = kwargs.get('user_id')
         super().__init__(stype, handle)
     
-    async def Send(self, message):
+    @asyncfunction
+    def Send(self, message):
         context = message.extra
         session = message.session
         
@@ -46,6 +47,6 @@ class MySession(Session):
         elif session.stype == SessionType.FRIEND or session.stype == SessionType.TEMPORARY:
             context['message_type'] = 'private'
             context['user_id'] = message.sender.uid
-        await CQBot.Send(context, message=message.data)
+        CQBot.Send(context, message=message.data)
 
 CQBot.run(host='127.0.0.1', port=8080)
