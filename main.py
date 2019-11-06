@@ -12,13 +12,7 @@ async def handle_msg(context):
     sender = MyUser(context['sender']['user_id'], name=context['sender']['nickname'])
     session = MySession(context)
     data = context['message']
-    message = Message(session, data, sender=sender)
-    meiri.Shell(message)
-
-def onMessage(context):
-    sender = MyUser(context['user_id'], context['sender']['name'])
-    session = MySession(context)
-    message = Message(session, context['message'], sender=sender, extra=context)
+    message = Message(session, data, sender=sender, extra=context)
     meiri.Shell(message)
 
 class MyUser(User):
