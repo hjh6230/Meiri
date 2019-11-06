@@ -15,6 +15,7 @@ class Syscall(Command):
         self.Parse(message)
         if self.cmd is None:
             self.finish = True
+            return
         elif self.cmd == 'Syscall' and not message.sender.AuthorityCheck():
             message.session.Send('权限不足')
             self.finish = True
@@ -28,7 +29,7 @@ class Syscall(Command):
     
     def Parse(self, message):
         self.cmd = None
-        if message.data.startwith('-'):
+        if message.data.startswith('-'):
             args = message.data.split(' ', 1)
             if args[0][1:] in self.commands:
                     self.cmd = self.commands[args[0][1:]]
