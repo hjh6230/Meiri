@@ -20,10 +20,10 @@ class Session:
 
     @asyncfunction
     def Execute(self, message):
+        print('Session.py line 23:', message.extra)
         command = self.context.GetCommand()
         self.sender = self.userManager.GetUser(message.sender)
         message.sender = self.sender
-        message.session = self
         command.Execute(message)
         if command.callee:
             self.context.Push(command.callee)
