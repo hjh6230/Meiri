@@ -47,6 +47,6 @@ class MySession(Session):
         elif session.stype == SessionType.FRIEND or session.stype == SessionType.TEMPORARY:
             context['message_type'] = 'private'
             context['user_id'] = message.sender.uid
-        CQBot.Send(context, message=message.data)
+        CQBot.send(context, message=message.data)
 
 CQBot.run(host='127.0.0.1', port=8080)
