@@ -5,9 +5,8 @@ from Meiri.Core import asyncfunction
 class Meiri:
     def __init__(self):
         self.sessions = {}
-        self.runing = True
+        self.runing = False
         self.interval = 3600
-        self.Update()
     
     def GetSession(self, message):
         sid = message.session.sid
@@ -20,6 +19,10 @@ class Meiri:
         session = self.GetSession(message)
         session.Execute(message)
     
+    def Run(self):
+        self.runing = True
+        self.Update()
+
     def Stop(self):
         self.runing = False
     

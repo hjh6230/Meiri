@@ -55,4 +55,15 @@ class MySession(Session):
         loop = asyncio.get_event_loop()
         loop.run_until_complete(CQBot.send(context, message=message, at_sender=at_user))
         loop.close()
-CQBot.run(host='127.0.0.1', port=8080)
+
+if __name__ == '__main__':
+    import sys
+    if len(sys.args) == 1 or sys.argv[1] == 'start':
+        meiri.Run()
+        CQBot.run(host='127.0.0.1', port=8080)
+    elif sys.argv[1] == 'stop':
+        meiri.Stop()
+    elif sys.argv[1] == 'restart':
+        meiri.Stop()
+        meiri.Run()
+        
