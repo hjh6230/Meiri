@@ -47,6 +47,10 @@ class MySession(Session):
         elif session.stype == SessionType.FRIEND or session.stype == SessionType.TEMPORARY:
             context['message_type'] = 'private'
             context['user_id'] = message.sender.uid
-        CQBot.send(context, message=message.data)
-
+        import asyncio
+        newLoop = asyncio.new_event_loop()
+        asyncio.set_event_loop(newLoop)
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(CQBot.send(context, message=message.data))
+        loop.close()
 CQBot.run(host='127.0.0.1', port=8080)
