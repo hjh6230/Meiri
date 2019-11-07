@@ -17,11 +17,13 @@ class Session:
         self.sid = Session._GetSessionId(self.stype, self.handle)
         self.context = Context()
         self.userManager = UserManager()
+        self.extra = None
 
     @asyncfunction
     def Execute(self, message):
         command = self.context.GetCommand()
         self.sender = self.userManager.GetUser(message.sender)
+        self.extra = message.extra
         message.sender = self.sender
         command.Execute(message)
         if command.callee:
@@ -30,10 +32,13 @@ class Session:
             self.context.Pop()
 
     def SetActive(self, level=10):
-        self._activity = level
+        self.activity = level
     
     def GetActive(self) -> bool:
-        return self._activity > 0
+        return self.activity > 0
+    
+    def Send(self, message, reciever=None):
+        raise 'You must override this method.'
     
     @classmethod
     def _GetSessionId(cls, stype, handle) -> str:

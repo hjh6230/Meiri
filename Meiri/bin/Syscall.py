@@ -17,7 +17,7 @@ class Syscall(Command):
             self.finish = True
             return
         elif self.cmd == 'Syscall' and not message.sender.AuthorityCheck():
-            message.session.Send('权限不足')
+            message.session.Send(message.data)
             self.finish = True
             return
         from importlib import import_module
@@ -32,6 +32,6 @@ class Syscall(Command):
         if message.data.startswith('-'):
             args = message.data.split(' ', 1)
             if args[0][1:] in self.commands:
-                    self.cmd = self.commands[args[0][1:]]
-                    self.param = args[1]
-                    message.data = args[1]
+                self.cmd = self.commands[args[0][1:]]
+                self.param = args[1]
+                message.data = args[1]

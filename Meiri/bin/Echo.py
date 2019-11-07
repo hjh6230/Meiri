@@ -8,7 +8,7 @@ class Echo(Command):
     
     def Execute(self, message):
         self.Parse(message)
-        message.session.Send(message)
+        message.session.Send(self.context)
         self.finish = True
     
     def Parse(self, message):
