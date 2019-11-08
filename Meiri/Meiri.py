@@ -9,9 +9,9 @@ class Meiri:
         self.interval = 3600
     
     def GetSession(self, message=None, sid=None):
-        if message:
+        if message and message.session.sid not in self.sessions:
             self.sessions[message.session.sid] = message.session
-        elif sid in self.sessions:
+        elif message.session.sid in self.sessions:
             self.sessions[sid].SetActive()
         else:
             return None
