@@ -106,7 +106,7 @@ class Incan(Command):
                                 self.camp[campjewel] -= increse[campjewel]
                                 self.members[name]["income"] += f'{campjewel}: {increse[campjewel]}枚, '
                             self.members[name]["income"] = self.members[name]["income"][:-2]
-                            member["status"] = 3
+                            self.members[name]["status"] = 3
                             message.session.Send(f'{name}选择撤退，你们平分了营地的宝石，{name}最终的收益为{self.members[name]["income"]}')
                         else:
                             member["status"] = 0
@@ -152,7 +152,7 @@ class Incan(Command):
                 if member['value'] > income:
                     income = member['value']
                     winner = f'{name}, '
-                if income > 0 and member['value'] == income:
+                elif income > 0 and member['value'] == income:
                     winner += f'{name}, '
         if alive:
             return f'{winner[:-2]}获得了最后的胜利，收益为{member["income"]}' if winner else '胆小鬼的冒险者哦，没有风险怎么会有回报呢！'
