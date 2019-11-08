@@ -87,24 +87,24 @@ class Incan(Command):
                 self.status = IncanStatus.GAMING
         elif self.status == IncanStatus.GAMING:
             if message.sender.name in self.members:
-                if self.context == '前进' and self.members[message.sender.name]['status'] == 0:
-                    self.members[message.sender.name]['status'] = 1
-                elif self.context == '撤退' and self.members[message.sender.name]['status'] == 0:
-                    self.members[message.sender.name]['status'] = 2
+                if self.context == '前进' and self.members[message.sender.name]["status"] == 0:
+                    self.members[message.sender.name]["status"] = 1
+                elif self.context == '撤退' and self.members[message.sender.name]["status"] == 0:
+                    self.members[message.sender.name]["status"] = 2
                 if self.CheckTurn():
                     cnt = 0
                     increse = campnumber // self.venture
                     for name, member in self.members.items():
-                        if member['status'] == 2:
+                        if member["status"] == 2:
                             cnt += 1
                             for campjewel, campnumber in self.camp.items():
                                 self.members[name][value] += Card.GetValue(campjewel, increse)
                                 self.camp[campjewel] -= increse
-                                self.members[name]['income'] += f'{campjewel}: {increse}枚, '
-                            self.members[name]['income'] = self.members[name]['income'][:-2]
-                            message.session.Send(f'{name}选择撤退，你们平分了营地的宝石，{name}最终的收益为{self.members[name]['income']}')
+                                self.members[name]["income"] += f'{campjewel}: {increse}枚, '
+                            self.members[name]["income"] = self.members[name]["income"][:-2]
+                            message.session.Send(f'{name}选择撤退，你们平分了营地的宝石，{name}最终的收益为{self.members[name]["income"]}')
                         else:
-                            member['status'] = 0
+                            member["status"] = 0
                     self.turn += 1
                     self.venture -= cnt
                     if self.venture == 0:
@@ -116,9 +116,9 @@ class Incan(Command):
                             if card.ctype in self.monsters:
                                 names = ""
                                 for name, member in self.members.items():
-                                    if member['status'] == 0:
+                                    if member["status"] == 0:
                                         names += name + ", "
-                                        member['status'] = -1
+                                        member["status"] = -1
                                         self.venture -= 1
                                 message.session.Send(f'第{self.turn}轮，你们遇到了来自{card.ctype}的袭击，{names[:-2]}命丧于此')
                                 sleep(1)
@@ -133,7 +133,7 @@ class Incan(Command):
     
     def CheckTurn(self):
         for member in self.members.values():
-            if member['status'] == 0:
+            if member["status"] == 0:
                 return False
         return True
     
@@ -141,10 +141,10 @@ class Incan(Command):
         winner = None
         income = 0
         for name, member in self.members.items():
-            if member['status'] == 2:
+            if member["status"] == 2:
                 if member['value'] > income:
                     income = member['value']
-                    winner = f'{name}获得最后的胜利，收入为{member['income']}'
+                    winner = f'{name}获得最后的胜利，收入为{member["income"]}'
         return winner if winner else '无人生还，做人不要太贪心哦~'
                 
 
