@@ -8,19 +8,18 @@ class Meiri:
         self.runing = False
         self.interval = 3600
     
-    def GetSession(self, message):
-        sid = message.session.sid
-        if sid not in self.sessions:
-            self.sessions[sid] = message.session
-        self.sessions[sid].SetActive()
-        print(f'meiri.py getSession(): {self.sessions[sid]}')
+    def GetSession(self, message=None, sid=None):
+        if message:
+            self.sessions[message.session.sid] = message.session
+        elif sid in self.sessions:
+            self.sessions[sid].SetActive()
+        else:
+            return None
         return self.sessions[sid]
 
     def Shell(self, message):
-        session = self.GetSession(message)
-        print(f'meiri.py Shell(): {session}')
-        session.Execute(message)
-    
+        message.session.Execute(message)
+            
     def Run(self):
         self.runing = True
         self.Update()

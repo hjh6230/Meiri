@@ -12,7 +12,7 @@ async def handle_msg(context):
     sender = MyUser(context['sender']['user_id'], name=context['sender']['nickname'])
     session = MySession(context)
     data = context['message']
-    message = Message(session, data, sender=sender, extra=context)
+    message = Message(session, data, sender=sender)
     meiri.Shell(message)
 
 class MyUser(User):
@@ -23,6 +23,7 @@ class MyUser(User):
     
 class MySession(Session):
     def __init__(self, kwargs):
+        self.extra = kwargs
         stype = kwargs.get('message_type')
         handle = None
         if stype == 'group':
@@ -39,8 +40,7 @@ class MySession(Session):
     @asyncfunction
     def Send(self, message, reciever=None):
         at_user = False
-        context = self.extra
-        print(f'main.py: {self}: {self.sid}') 
+        context = self.extra 
         if self.stype == SessionType.GROUP:
             if reciever:
                 context['user_id'] = reciever.uid
