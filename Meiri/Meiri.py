@@ -8,16 +8,18 @@ class Meiri:
         self.runing = False
         self.interval = 3600
     
-    def GetSession(self, message=None, sid=None):
-        if message and message.session.sid not in self.sessions:
-            self.sessions[message.session.sid] = message.session
-        elif message.session.sid in self.sessions:
+    def GetSession(self, message):
+        sid = message.session.sid
+        if sid in self.sessions:
             self.sessions[sid].SetActive()
+            self.sessions[sid].extra = message.session.extra
         else:
-            return None
+            self.sessions[sid] = message.session
         return self.sessions[sid]
 
     def Shell(self, message):
+        session = self.GetSession(message)
+        message.session = session
         message.session.Execute(message)
             
     def Run(self):

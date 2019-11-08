@@ -22,10 +22,9 @@ class Syscall(Command):
             return
         from importlib import import_module
         cmd = import_module(f'Meiri.bin.{self.cmd}')
-        self.callee = eval(f'{cmd.__name__[6:]}.{self.cmd}')
-        command = self.callee()
-        command.Execute(message)
-        self.finish = command.finish
+        self.callee = eval(f'{cmd.__name__[6:]}.{self.cmd}')()
+        self.callee.Execute(message)
+        self.finish = self.callee.finish
     
     def Parse(self, message):
         self.cmd = None
