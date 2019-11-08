@@ -40,6 +40,7 @@ class MySession(Session):
     def Send(self, message, reciever=None):
         at_user = False
         context = self.extra
+        print(f'main.py: {self}: {self.sid}') 
         if self.stype == SessionType.GROUP:
             if reciever:
                 context['user_id'] = reciever.uid

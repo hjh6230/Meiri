@@ -13,11 +13,12 @@ class Meiri:
         if sid not in self.sessions:
             self.sessions[sid] = message.session
         self.sessions[sid].SetActive()
-        self.session[sid].extra = message.extra
+        print(f'meiri.py getSession(): {self.sessions[sid]}')
         return self.sessions[sid]
 
     def Shell(self, message):
         session = self.GetSession(message)
+        print(f'meiri.py Shell(): {session}')
         session.Execute(message)
     
     def Run(self):

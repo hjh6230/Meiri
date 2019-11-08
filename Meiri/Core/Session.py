@@ -24,6 +24,7 @@ class Session:
         command = self.context.GetCommand()
         self.sender = self.userManager.GetUser(message.sender)
         self.extra = message.extra
+        print(f'session.py: {self.sid}: {self}')
         message.sender = self.sender
         command.Execute(message)
         if command.callee:
