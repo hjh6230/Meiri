@@ -13,6 +13,7 @@ class Meiri:
         if sid not in self.sessions:
             self.sessions[sid] = message.session
         self.sessions[sid].SetActive()
+        self.session[sid].extra = message.extra
         return self.sessions[sid]
 
     def Shell(self, message):
