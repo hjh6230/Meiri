@@ -58,7 +58,7 @@ class MySession(Session):
 
 if __name__ == '__main__':
     import sys
-    if len(sys.args) == 1 or sys.argv[1] == 'start':
+    if len(sys.argv) == 1 or sys.argv[1] == 'start':
         meiri.Run()
         CQBot.run(host='127.0.0.1', port=8080)
     elif sys.argv[1] == 'stop':

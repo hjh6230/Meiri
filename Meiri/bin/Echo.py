@@ -13,3 +13,4 @@ class Echo(Command):
     
     def Parse(self, message):
         self.context = message.data
+        print(self.context)
