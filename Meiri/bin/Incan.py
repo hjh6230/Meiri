@@ -12,7 +12,7 @@ class IncanStatus(Enum):
     GAMING = 3
 
 class Card:
-    def __init__(self, , ctype, number=1, value=1, monster=False):
+    def __init__(self, ctype, number=1, value=1, monster=False):
         self.ctype = ctype
         self.number = number
         self.monster = monster
@@ -85,7 +85,7 @@ class Incan(Command):
                 sleep(1)
                 message.session.Send('接下来的每一回合，输入<前进>或者<撤退>表示你的行动，待小队全员做出决定之后，进入下一轮')
                 self.status = IncanStatus.GAMING
-        elif self.status == IncanStatus.GAMING
+        elif self.status == IncanStatus.GAMING:
             if message.sender.name in self.members:
                 if self.context == '前进' and self.members[message.sender.name]['status'] == 0:
                     self.members[message.sender.name]['status'] = 1

@@ -4,5 +4,5 @@ SysPath = {
     'Syscall': ['syscall', 'sudo'],
     'Echo': ['echo', 'print'],
     'Admin': ['admin'],
-    'Incan': ['Incan', '印加']
+    'Incan': ['incan', '印加']
 }
