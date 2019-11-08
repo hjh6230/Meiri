@@ -114,7 +114,6 @@ class Incan(Command):
                     self.venture -= cnt
                     if self.venture == 0:
                         message.session.Send(self.FindWinner())
-                        finish = True
                     else:
                         card = self.cardset.Draw()
                         if card.monster:
@@ -146,6 +145,7 @@ class Incan(Command):
         winner = ''
         income = 0
         alive = False
+        self.finish = True
         for name, member in self.members.items():
             if member["status"] == 3:
                 alive = True
