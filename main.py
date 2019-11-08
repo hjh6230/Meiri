@@ -23,19 +23,23 @@ class MyUser(User):
     
 class MySession(Session):
     def __init__(self, kwargs):
-        self.extra = kwargs
-        stype = kwargs.get('message_type')
-        handle = None
-        if stype == 'group':
-            stype = SessionType.GROUP
-            handle = kwargs.get('group_id')
-        elif stype == 'discuss':
-            stype = SessionType.GROUP
-            handle = kwargs.get('discuss_id')
-        elif stype == 'private':
-            stype = SessionType.FRIEND
-            handle = kwargs.get('user_id')
+        def GetMetaData(context):
+            stype = kwargs.get('message_type')
+            handle = None
+            if stype == 'group':
+                stype = SessionType.GROUP
+                handle = kwargs.get('group_id')
+            elif stype == 'discuss':
+                stype = SessionType.GROUP
+                handle = kwargs.get('discuss_id')
+            elif stype == 'private':
+                stype = SessionType.FRIEND
+                handle = kwargs.get('user_id')
+            return stype, handle
+
+        stype, handle = GetMetaData(kwargs)
         super().__init__(stype, handle)
+        self.extra = kwargs
     
     @asyncfunction
     def Send(self, message, reciever=None):
