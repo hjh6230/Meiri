@@ -55,7 +55,7 @@ class Incan(Command):
         self.status = IncanStatus.READY
         self.description = ['欢迎来到Incan宝藏，是继续探索？还是及时撤退？贪婪与勇气，谁会是最后的赢家？','输入<参加>、<加入>或者<Join>，召集队友，即可开始属于你们的冒险！']
         self.author = 'Lunex Nocty'
-        self.version = '0.0.1'
+        self.version = '1.0.3'
         self.members = {}
         self.turn = 0
         self.camp = {'Sapphire':0,'Diamond':0,'Ruby':0,'Emerald':0}
@@ -108,6 +108,7 @@ class Incan(Command):
                             self.members[name]["income"] = self.members[name]["income"][:-2]
                             self.members[name]["status"] = 3
                             message.session.Send(f'{name}选择撤退，你们平分了营地的宝石，{name}最终的收益为{self.members[name]["income"]}')
+                            sleep(1)
                         else:
                             member["status"] = 0
                     self.turn += 1
