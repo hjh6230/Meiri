@@ -9,8 +9,8 @@ CQBot = CQHttp(api_root='http://127.0.0.1:5700/', access_token='AmeyaMeiri', sec
 
 @CQBot.on_message()
 async def handle_msg(context):
-    sender = MyUser(context['sender']['user_id'], name=context['sender']['nickname'])
-    session = MySession(context)
+    sender = CQUser(context['sender']['user_id'], name=context['sender']['nickname'])
+    session = CQSession(context)
     data = context['message']
     message = Message(session, data, sender=sender)
     meiri.Shell(message)
