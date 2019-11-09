@@ -15,13 +15,13 @@ async def handle_msg(context):
     message = Message(session, data, sender=sender)
     meiri.Shell(message)
 
-class MyUser(User):
+class CQUser(User):
     def __init__(self, uid, name='unknown', sex='female', age=17):
         super().__init__(uid, name)
         self.sex = sex
         self.age = age
     
-class MySession(Session):
+class CQSession(Session):
     def __init__(self, kwargs):
         def GetMetaData(context):
             stype = kwargs.get('message_type')

@@ -109,8 +109,8 @@ class Incan(Command):
                             self.members[name]["status"] = 3
                             message.session.Send(f'{name}选择撤退，你们平分了营地的宝石，{name}最终的收益为{self.members[name]["income"]}')
                             sleep(1)
-                        else:
-                            member["status"] = 0
+                        elif member["status"] == 1:
+                            self.members[name]["status"] = 0
                     self.turn += 1
                     self.venture -= cnt
                     if self.venture == 0:
