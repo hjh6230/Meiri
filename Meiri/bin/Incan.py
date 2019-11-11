@@ -66,7 +66,7 @@ class Incan(Command):
         self.turn = 0
         self.camp = {'Sapphire':0,'Diamond':0,'Ruby':0,'Emerald':0}
         self.cardset = CardSet()
-        self.monsters = set()
+        self.monsters = []
         self.venture = 0
         self.cheer = ['前方是梦想？还是死亡？', '这可没办法平分呢~', '胆小鬼可什么也得不到！', '运气站在有勇气的人一边。', '再挖一颗就回去！']
         self.warning = ['这次就放过你们，不会再有下次了。', '何人扰吾安眠？', '贪婪是人类的原罪。', '这是……人类？', '最珍贵的宝石就在前方，可你逃得掉吗？']
@@ -118,6 +118,11 @@ class Incan(Command):
                             status += '打算逃跑\n'
                         elif member['status'] == 3:
                             status += '放弃冒险了\n'
+                    status += '冒险收获包括: '
+                    for name, num in self.camp.items():
+                        status += f'<{name}>{num}枚，'
+                    status = status[:-2] + '\n'
+                    status += f'目前收到了来自<{">, <".join(self.monsters)}>的警告。'
                     message.session.Send(status)
                 if self.CheckTurn():
                     cnt = 0 # 撤退人数
@@ -171,7 +176,7 @@ class Incan(Command):
         return True
     
     def FindWinner(self):
-        winner = ''
+        winner = []
         income = 0
         alive = False
         self.finish = True
@@ -180,11 +185,12 @@ class Incan(Command):
                 alive = True
                 if member['value'] > income:
                     income = member['value']
-                    winner = f'<{name}>, '
+                    winner.clear()
+                    winner.append(name)
                 elif income > 0 and member['value'] == income:
-                    winner += f'<{name}>, '
+                    winner.append(name)
         if alive:
-            return f'{winner[:-2]}获得了最后的胜利，收益为{member["income"]}' if winner else '胆小鬼的冒险者哦，没有风险怎么会有回报呢！'
+            return f'<{">, <".join(winner)}>获得了最后的胜利，收益为{self.members[winner[0]]["income"]}' if winner else '胆小鬼的冒险者哦，没有风险怎么会有回报呢！'
         return '无人生还，做人不要太贪心哦~'
 
 
