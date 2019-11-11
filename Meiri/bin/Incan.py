@@ -75,6 +75,7 @@ class Incan(Command):
     def Execute(self, message):
         self.Parse(message)
         if self.context == '结束' or self.context == 'end':
+            message.session.Send('下次再见~')
             self.finish = True
             return
         if self.status == IncanStatus.READY:
