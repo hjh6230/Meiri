@@ -15,7 +15,7 @@ async def handle_msg(context):
     message = Message(session, data, sender=sender)
     meiri.Shell(message)
 
-@bot.on_request('group', 'friend')
+@CQBot.on_request('group', 'friend')
 async def handle_request(context):
     return {'approve': True}
 
