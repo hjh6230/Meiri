@@ -54,14 +54,10 @@ class Incan(Command):
     def __init__(self):
         self.status = IncanStatus.READY
         self.description = [
-            '欢迎来到Incan宝藏，是继续探索？还是立刻逃跑？贪婪与勇气，谁会是最后的赢家？',
-            '输入<参加>、<加入>或者<Join>参与这场大冒险吧！', 
-            '所有的魔物在攻击前都会警告你们一次，活用魔物对人类最后的怜悯吧！',
-            '活着带出宝石总价值最高的冒险者才能成为最后的赢家。',
-            '每一次决定都至关重要，死亡总在不经意间降临。',
-            '来吧！向我们(魔物)展示你们人类的贪婪与勇气吧！']
+            '欢迎来到Incan宝藏，是继续探索？还是立刻逃跑？贪婪与勇气，谁会是最后的赢家？输入<参加>、<加入>或者<Join>参与这场大冒险吧！', 
+            '每一次决定都至关重要，死亡总在不经意间降临。活着带出宝石总价值最高的冒险者才能成为最后的赢家。所有的魔物在攻击前都会警告你们一次，活用魔物对人类最后的怜悯吧！来吧！向我们(魔物)展示你们人类的贪婪与勇气吧！']
         self.author = 'Lunex Nocty'
-        self.version = '1.0.3'
+        self.version = '1.0.8'
         self.members = {}
         self.turn = 0
         self.camp = {'Sapphire':0,'Diamond':0,'Ruby':0,'Emerald':0}
@@ -91,7 +87,7 @@ class Incan(Command):
                     message.session.Send('你已经在小队中了，无需重复加入')
                 else:
                     self.members[message.sender.name] = {'status': 0, 'income':'','value':0}
-                    message.session.Send(f'{message.sender.name}加入了冒险小队，当前小队共有{len(self.members)}人，输入<开始>或<Go>开始冒险吧！')
+                    message.session.Send(f'<{message.sender.name}>加入了冒险小队，当前小队共有{len(self.members)}人，输入<开始>或<Go>开始冒险吧！')
             elif self.context == '开始' or self.context == 'Go':
                 message.session.Send('游戏开始！')
                 self.venture = len(self.members)
