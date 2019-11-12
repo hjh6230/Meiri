@@ -15,6 +15,10 @@ async def handle_msg(context):
     message = Message(session, data, sender=sender)
     meiri.Shell(message)
 
+@bot.on_request('group', 'friend')
+async def handle_request(context):
+    return {'approve': True}
+
 class CQUser(User):
     def __init__(self, uid, name='unknown', sex='female', age=17):
         super().__init__(uid, name)
