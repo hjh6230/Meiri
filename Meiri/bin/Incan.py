@@ -120,7 +120,7 @@ class Incan(Command):
                             status += '放弃冒险了\n'
                     status += '冒险收获包括: '
                     for name, num in self.camp.items():
-                        status += f'<{name}>{num}枚，'
+                        status += f'<{name}>{num}枚, '
                     status = status[:-2] + '\n'
                     status += f'目前收到了来自<{">, <".join(self.monsters)}>的警告。'
                     message.session.Send(status)
@@ -162,7 +162,7 @@ class Incan(Command):
                                 sleep(1)
                                 message.session.Send(self.FindWinner())
                             else:
-                                self.monsters.add(card.ctype)
+                                self.monsters.append(card.ctype)
                                 message.session.Send(f'第{self.turn}轮，你们发现了来自<{card.ctype}>的警告，{choice(self.warning)}')
                         else:
                             self.camp[card.ctype] += card.number
