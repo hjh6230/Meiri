@@ -66,7 +66,7 @@ class Incan(Command):
             '欢迎来到Incan宝藏，是继续探索？还是立刻逃跑？贪婪与勇气，谁会是最后的赢家？\n输入<参加>、<加入>或者<Join>参与这场大冒险吧！', 
             '每一次决定都至关重要，死亡总在不经意间降临。活着带出宝石总价值最高的冒险者才能成为最后的赢家。所有的魔物在攻击前都会警告你们一次，活用魔物对人类最后的怜悯吧！\n来吧！向我们(魔物)展示你们人类的贪婪与勇气吧！']
         self.author = 'Lunex Nocty'
-        self.version = '1.0.9'
+        self.version = '1.0.9.001'
         self.members = {}
         self.turn = 0
         self.camp = {'Sapphire':0,'Diamond':0,'Ruby':0,'Emerald':0}
@@ -77,44 +77,52 @@ class Incan(Command):
         self.cheer = ['前方是梦想？还是死亡？', '这可没办法平分呢~', '胆小鬼可什么也得不到！', '运气站在有勇气的人一边。', '再挖一颗就回去！']
         self.warning = ['这次就放过你们，不会再有下次了。', '何人扰吾安眠？', '贪婪是人类的原罪。', '这是……人类？', '最珍贵的宝石就在前方，可你逃得掉吗？']
         self.death = ['抱歉呢，此路不通~代价是生命。', '留于此地的宝石，就赐予给下一个来到此地的人类吧~', '为什么呢？明明已经给出了警告，为什么还要前进呢？']
-    
+        self.helpdoc = '\n'.join(['规则:', '1. 玩家需要探索洞窟，挖掘宝石，并活着离开', '2. 玩家挖到的宝石会被平分，放弃冒险的玩家无法参与分配宝石，无法平分的宝石会被留在营地', '3. 游戏一共有30张卡牌，其中15张宝石卡，15张怪物卡，怪物卡共5种，每种各3张', '4. 每一回合需要玩家决定前进还是撤退，撤退视为放弃冒险，有权从营地分配宝石并离开洞窟, 选择前进的玩家抽取一张卡牌', '4. 若抽到的是宝石牌，将宝石放入营地，若抽到的是怪物牌，第一次抽到视为警告，第二次抽到同样的牌时，则当前所有正在探险的玩家被怪物杀害', '5. 当前没有玩家继续探险则游戏结束，或者的玩家中获得宝石总价值最高的玩家获胜'])
+
     def Execute(self, message):
         self.Parse(message)
-        if self.context == '结束' or self.context == 'end' or self.context == '退出':
-            message.session.Send('下次再见~')
+        if self.context in ['关于', 'about', 'version', '版本']:
+            message.session.Send(f'Version: {self.version}\nAuthor: {self.author}\nUpdate Time: {self.lastest}\n')
             self.finish = True
             return
-        if self.context == '关于' or self.context == 'About' or self.context == 'version' or self.context == '版本':
-            message.session.Send(f'Version: {self.version}\nAuthor: {self.author}\nUpdate Time: {self.lastest}')
+        if self.context in ['帮助', 'help']:
+            message.session.Send(f'{self.helpdoc}')
+            self.finish = True
+            return
+        if self.context in ['exit', 'quit', 'end', '退出', '结束']:
+            if self.status != IncanStatus.READY:
+                message.session.Send('游戏结束，下次再见~')
+            self.finish = True
+            return
         if self.status == IncanStatus.READY:
-            if self.context == '开始' or self.context == 'start' or self.context == 'begin':
+            if self.context in ['开始', 'start', 'begin', 'run']:
                 self.status = IncanStatus.INQUEUE
                 self.members[message.sender.name] = {'status': 0, 'income':'','value':0}
                 for desc in self.description:
                     message.session.Send(desc)
                     sleep(1)
         elif self.status == IncanStatus.INQUEUE:
-            if '参加' in self.context or '加入' in self.context or self.context == 'Join':
+            if self.context in ['参加', '加入', 'join']:
                 if message.sender.name in self.members:
                     message.session.Send('你已经在小队中了，无需重复加入')
                 else:
                     self.members[message.sender.name] = {'status': 0, 'income':'','value':0}
                     message.session.Send(f'<{message.sender.name}>加入了冒险小队，当前小队共有{len(self.members)}人，输入<开始>或<Go>开始冒险吧！')
-            elif self.context == '开始' or self.context == 'Go':
+            elif self.context in ['开始', 'go', 'start']:
                 message.session.Send('游戏开始！')
                 self.venture = len(self.members)
                 sleep(1)
                 message.session.Send('接下来的每一回合，输入<前进>或者<撤退>表示你的行动，待小队全员做出决定之后，进入下一轮')
                 self.status = IncanStatus.GAMING
-            elif self.context == '状态' or self.context == 'status':
+            elif self.context in ['状态', 'status']:
                 message.session.Send(f'当前参与的玩家有:<{">, <".join(list(self.members.keys()))}>')
         elif self.status == IncanStatus.GAMING:
             if message.sender.name in self.members:
-                if self.context == '前进' and self.members[message.sender.name]["status"] == 0:
+                if self.context in ['前进', 'go'] and self.members[message.sender.name]["status"] == 0:
                     self.members[message.sender.name]["status"] = 1
-                elif self.context == '撤退' and self.members[message.sender.name]["status"] == 0:
+                elif self.context in ['撤退', 'escape'] and self.members[message.sender.name]["status"] == 0:
                     self.members[message.sender.name]["status"] = 2
-                elif self.context == '状态' or self.context == 'status':
+                elif self.context in ['状态', 'status']:
                     status = ''
                     for name, member in self.members.items():
                         status += f'<{name}> '
@@ -204,4 +212,4 @@ class Incan(Command):
 
     
     def Parse(self, message):
-        self.context = message.data
+        self.context = message.data.lower() if message.data else 'run'
