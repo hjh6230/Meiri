@@ -3,7 +3,8 @@
 from Meiri.Core.Command import Command
 from enum import Enum, unique
 from time import sleep
-from random import randint, choice
+from datetime import date
+from random import randint, choice, shuffle
 
 @unique
 class IncanStatus(Enum):
@@ -33,12 +34,20 @@ class CardSet:
             self.cardset.append(Card('Mummy', monster=True))
             self.cardset.append(Card('Flame', monster=True))
             self.cardset.append(Card('Collapse', monster=True))
+        shuffle(self.cardset)
     
     def Draw(self):
         card = choice(self.cardset)
         self.cardset.remove(card)
         return card
     
+    def DrawJewel(self):
+        card = choice(self.cardset)
+        while card.monster:
+            card = choice(self.cardset)
+        self.cardset.remove(card)
+        return card
+
     @classmethod
     def GetValue(cls, ctype, num) -> int:
         if ctype == 'Sapphire':
@@ -54,26 +63,29 @@ class Incan(Command):
     def __init__(self):
         self.status = IncanStatus.READY
         self.description = [
-            '欢迎来到Incan宝藏，是继续探索？还是立刻逃跑？贪婪与勇气，谁会是最后的赢家？输入<参加>、<加入>或者<Join>参与这场大冒险吧！', 
-            '每一次决定都至关重要，死亡总在不经意间降临。活着带出宝石总价值最高的冒险者才能成为最后的赢家。所有的魔物在攻击前都会警告你们一次，活用魔物对人类最后的怜悯吧！来吧！向我们(魔物)展示你们人类的贪婪与勇气吧！']
+            '欢迎来到Incan宝藏，是继续探索？还是立刻逃跑？贪婪与勇气，谁会是最后的赢家？\n输入<参加>、<加入>或者<Join>参与这场大冒险吧！', 
+            '每一次决定都至关重要，死亡总在不经意间降临。活着带出宝石总价值最高的冒险者才能成为最后的赢家。所有的魔物在攻击前都会警告你们一次，活用魔物对人类最后的怜悯吧！\n来吧！向我们(魔物)展示你们人类的贪婪与勇气吧！']
         self.author = 'Lunex Nocty'
-        self.version = '1.0.8'
+        self.version = '1.0.9'
         self.members = {}
         self.turn = 0
         self.camp = {'Sapphire':0,'Diamond':0,'Ruby':0,'Emerald':0}
         self.cardset = CardSet()
         self.monsters = []
         self.venture = 0
+        self.lastest = date(2019, 11, 13)
         self.cheer = ['前方是梦想？还是死亡？', '这可没办法平分呢~', '胆小鬼可什么也得不到！', '运气站在有勇气的人一边。', '再挖一颗就回去！']
         self.warning = ['这次就放过你们，不会再有下次了。', '何人扰吾安眠？', '贪婪是人类的原罪。', '这是……人类？', '最珍贵的宝石就在前方，可你逃得掉吗？']
         self.death = ['抱歉呢，此路不通~代价是生命。', '留于此地的宝石，就赐予给下一个来到此地的人类吧~', '为什么呢？明明已经给出了警告，为什么还要前进呢？']
     
     def Execute(self, message):
         self.Parse(message)
-        if self.context == '结束' or self.context == 'end':
+        if self.context == '结束' or self.context == 'end' or self.context == '退出':
             message.session.Send('下次再见~')
             self.finish = True
             return
+        if self.context == '关于' or self.context == 'About' or self.context == 'version' or self.context == '版本':
+            message.session.Send(f'Version: {self.version}\nAuthor: {self.author}\nUpdate Time: {self.lastest}')
         if self.status == IncanStatus.READY:
             if self.context == '开始' or self.context == 'start' or self.context == 'begin':
                 self.status = IncanStatus.INQUEUE
@@ -145,7 +157,7 @@ class Incan(Command):
                     if self.venture == 0:
                         message.session.Send(self.FindWinner())
                     else:
-                        card = self.cardset.Draw()
+                        card = self.cardset.Draw() if self.turn > 1 else self.cardset.DrawJewel()
                         if card.monster:
                             if card.ctype in self.monsters:
                                 names = "<"
@@ -154,15 +166,15 @@ class Incan(Command):
                                         names += name + ">, <"
                                         member["status"] = -1
                                         self.venture -= 1
-                                message.session.Send(f'第{self.turn}轮，你们遭受了来自<{card.ctype}>的袭击，{names[:-3]}死于贪婪。{choice(self.death)}')
+                                message.session.Send(f'第{self.turn}轮，{names[:-3]}死于贪婪。\n\n<{card.ctype}>: "{choice(self.death)}"')
                                 sleep(1)
                                 message.session.Send(self.FindWinner())
                             else:
                                 self.monsters.append(card.ctype)
-                                message.session.Send(f'第{self.turn}轮，你们发现了来自<{card.ctype}>的警告，{choice(self.warning)}')
+                                message.session.Send(f'第{self.turn}轮，你们发现了来自<{card.ctype}>的警告: "{choice(self.warning)}"')
                         else:
                             self.camp[card.ctype] += card.number
-                            message.session.Send(f'第{self.turn}轮，恭喜你们挖到了<{card.ctype}>{card.number}枚！{choice(self.cheer)}')
+                            message.session.Send(f'第{self.turn}轮，恭喜你们挖到了<{card.ctype}>{card.number}枚！\n<概率女神>: "{choice(self.cheer)}"')
 
     
     def CheckTurn(self):
